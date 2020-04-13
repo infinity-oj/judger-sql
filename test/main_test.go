@@ -2,9 +2,10 @@ package test
 
 import (
 	"fmt"
-	"judgeBackend/src/service/sakai"
 	"testing"
 	"time"
+
+	"github.com/infinity-oj/judger-sql/interval/service/sakai"
 )
 
 func TestJudge(t *testing.T) {
