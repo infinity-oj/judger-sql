@@ -3,8 +3,9 @@ package sample
 import (
 	"database/sql"
 	"errors"
-	"gopkg.in/yaml.v2"
 	"io/ioutil"
+
+	"gopkg.in/yaml.v2"
 )
 
 type Sample struct {
@@ -27,8 +28,12 @@ func LoadFromFile(filepath string) (*Sample, error) {
 	if err != nil {
 		return nil, err
 	}
+	return LoadFromBytes(f)
+}
+
+func LoadFromBytes(bytes []byte) (*Sample, error) {
 	sample := Sample{}
-	err = yaml.Unmarshal(f, &sample)
+	err := yaml.Unmarshal(bytes, &sample)
 	if err != nil {
 		return nil, err
 	}
