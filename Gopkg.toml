@@ -57,6 +57,10 @@
   name = "gopkg.in/yaml.v2"
   version = "2.2.8"
 
+[[constraint]]
+  name = "google.golang.org/grpc"
+  version = "1.19.0"
+
 [prune]
   go-tests = true
   unused-packages = true

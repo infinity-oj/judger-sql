@@ -8,7 +8,7 @@ service Judgements {
   rpc SubmitJudgement(SubmitJudgementRequest) returns (SubmitJudgementResponse);
   rpc FetchHashFile (FetchFileHashRequest) returns (FetchFileHashResponse);
   rpc FetchFile (FetchJudgeFileRequest) returns (FetchJudgeFileResponse);
-  rpc FetchJudgement (FetchJudgementRequest) returns (ReturnJudgementRequest);
+  rpc FetchJudgement (FetchJudgementRequest) returns (FetchJudgementResponse);
   rpc ReturnJudgement (ReturnJudgementRequest) returns (ReturnJudgementResponse);
   rpc ListJudgements(ListRequest) returns (ListResponse);
 }
@@ -64,11 +64,17 @@ message FetchJudgementRequest {
 
 message FetchJudgementResponse {
   string problem_id = 1;
+  string test_case = 2;
+
   uint64 time_limit = 3;
   uint64 memory_limit = 4;
-  string user_code = 5;
-  string file_io_input_name = 6;
-  string file_io_output_name = 7;
+
+  string public_space = 5;
+  string private_space = 6;
+  string user_space = 7;
+
+  string file_io_input_name = 8;
+  string file_io_output_name = 9;
 }
 
 

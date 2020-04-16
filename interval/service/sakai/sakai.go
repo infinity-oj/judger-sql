@@ -161,6 +161,7 @@ func StudentToInput(studentSlice map[string]*Student) error {
 }
 
 func InitAndRun(sampleDir string, student *Student, reportChan chan report.Report) {
+	fmt.Println("ReadDir")
 	files, err := ioutil.ReadDir(sampleDir)
 	if err != nil {
 		log.Fatal(err)
@@ -168,21 +169,25 @@ func InitAndRun(sampleDir string, student *Student, reportChan chan report.Repor
 	input := student.FileContent
 	tmpReportChan := make(chan report.Report)
 	for _, f := range files {
+		fmt.Println("LoadFile")
 		s, err := sample.LoadFromFile(path.Join(sampleDir, f.Name()))
 		if err != nil {
 			log.Fatal(err)
 		}
-		t := test.SelectTest(*s)
 
 		if input[s.Filename] == "" {
 			reportChan <- report.Report{SID: student.SID, Grade: 0, Summary: s.Filename + " not found.\n", End: false}
 			continue
 		}
 
+		fmt.Println("SelectTest")
+		t := test.SelectTest(*s)
+		fmt.Println("Init")
 		err = t.Init(*s, input[s.Filename])
 		if err != nil {
 			log.Fatal(err)
 		}
+		fmt.Println("Run")
 		go t.Run(tmpReportChan)
 		r := <-tmpReportChan
 		r.SID = student.SID
@@ -210,7 +215,9 @@ func Judge(gradeCSV, sampleDir string) error {
 	}
 	reportChanQueue := make(chan report.Report, len(studentMap))
 	for _, student := range studentMap {
+		fmt.Println(student.SID)
 		go InitAndRun(sampleDir, student, reportChanQueue)
+		break
 	}
 	for len(tmpMap) > 0 {
 		r := <-reportChanQueue
@@ -221,6 +228,7 @@ func Judge(gradeCSV, sampleDir string) error {
 		} else {
 			studentMap[r.SID].Grade += r.Grade
 			studentMap[r.SID].Summary = append(studentMap[r.SID].Summary, r.Summary)
+			fmt.Printf("Update %s with grade %.2f\n", r.SID, studentMap[r.SID].Grade)
 		}
 	}
 	err = WriteToCSV(studentMap, gradeCSV)

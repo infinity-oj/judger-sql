@@ -8,7 +8,7 @@ Please see the [godoc](https://godoc.org/github.com/opencontainers/go-digest) fo
 
 # What is a digest?
 
-A digest is just a [hash](https://en.wikipedia.org/wiki/Hash_function).
+A digest is just a hash.
 
 The most common use case for a digest is to create a content
 identifier for use in [Content Addressable Storage](https://en.wikipedia.org/wiki/Content-addressable_storage)
@@ -60,20 +60,17 @@ out when using this package.
     ```go
     import (
         _ "crypto/sha256"
-        _ "crypto/sha512"
+   	    _ "crypto/sha512"
     )
     ```
     This may seem inconvenient but it allows you replace the hash 
     implementations with others, such as https://github.com/stevvooe/resumable.
  
-2. Even though `digest.Digest` may be assemblable as a string, _always_ 
+2. Even though `digest.Digest` may be assemable as a string, _always_ 
     verify your input with `digest.Parse` or use `Digest.Validate`
     when accepting untrusted input. While there are measures to 
     avoid common problems, this will ensure you have valid digests
     in the rest of your application.
-
-3. While alternative encodings of hash values (digests) are possible (for
-    example, base64), this package deals exclusively with hex-encoded digests.
 
 # Stability
 
@@ -89,17 +86,19 @@ New additions will be met with skepticism. If you think there is a
 missing feature, please file a bug clearly describing the problem and 
 the alternatives you tried before submitting a PR.
 
-## Code of Conduct
+# Reporting security issues
 
-Participation in the OpenContainers community is governed by [OpenContainer's Code of Conduct][code-of-conduct].
+Please DO NOT file a public issue, instead send your report privately to
+security@opencontainers.org.
 
-## Security
+The maintainers take security seriously. If you discover a security issue,
+please bring it to their attention right away!
 
-If you find an issue, please follow the [security][security] protocol to report it.
+If you are reporting a security issue, do not create an issue or file a pull
+request on GitHub. Instead, disclose the issue responsibly by sending an email
+to security@opencontainers.org (which is inhabited only by the maintainers of
+the various OCI projects).
 
 # Copyright and license
 
-Copyright © 2016 Docker, Inc. All rights reserved, except as follows. Code is released under the [Apache 2.0 license](LICENSE). This `README.md` file and the [`CONTRIBUTING.md`](CONTRIBUTING.md) file are licensed under the Creative Commons Attribution 4.0 International License under the terms and conditions set forth in the file [`LICENSE.docs`](LICENSE.docs). You may obtain a duplicate copy of the same license, titled CC BY-SA 4.0, at http://creativecommons.org/licenses/by-sa/4.0/.
-
-[security]: https://github.com/opencontainers/org/blob/master/security
-[code-of-conduct]: https://github.com/opencontainers/org/blob/master/CODE_OF_CONDUCT.md
+Copyright © 2016 Docker, Inc. All rights reserved, except as follows. Code is released under the [Apache 2.0 license](LICENSE.code). This `README.md` file and the [`CONTRIBUTING.md`](CONTRIBUTING.md) file are licensed under the Creative Commons Attribution 4.0 International License under the terms and conditions set forth in the file [`LICENSE.docs`](LICENSE.docs). You may obtain a duplicate copy of the same license, titled CC BY-SA 4.0, at http://creativecommons.org/licenses/by-sa/4.0/.
