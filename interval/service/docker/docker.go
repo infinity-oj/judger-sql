@@ -136,8 +136,10 @@ func Build(s sample.Sample) error {
 		return err
 	}
 	cli.NegotiateAPIVersion(context.Background())
+	filename := path.Base(s.Spec.Database)
+
 	args := map[string]*string{
-		"DB_DUMP_FILE": &s.Spec.Database,
+		"DB_DUMP_FILE": &filename,
 	}
 	options := types.ImageBuildOptions{
 		NoCache:        false,

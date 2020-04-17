@@ -94,6 +94,17 @@ func main() {
 			log.Fatalf("could not write database file : %v", err)
 		}
 
+
+		waitForPG, err := getFile(c, res.GetPrivateSpace(), "dockerfile/assignment3/wait-for-pg.sh")
+		if err != nil {
+			log.Fatalf("could not find database file : %v", err)
+		}
+
+		err = ioutil.WriteFile("dockerfile/assignment3/wait-for-pg.sh", waitForPG, 0666)
+		if err != nil {
+			log.Fatalf("could not write database file : %v", err)
+		}
+
 		userFileName := fmt.Sprintf("%s.sql", res.GetTestCase())
 		userFile, err := getFile(c, res.GetUserSpace(), userFileName)
 		if err != nil {
