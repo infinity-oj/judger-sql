@@ -56,7 +56,7 @@ message FetchJudgeFileResponse {
 }
 
 message FetchJudgementRequest {
-  string test_case = 1;
+  uint64 test_point = 1;
   uint64 time_limit = 2;
   uint64 memory_limit = 3;
 }
@@ -64,11 +64,15 @@ message FetchJudgementRequest {
 
 message FetchJudgementResponse {
   string problem_id = 1;
+  string test_case = 2;
+
   uint64 time_limit = 3;
   uint64 memory_limit = 4;
+
   string public_space = 5;
   string private_space = 6;
   string user_space = 7;
+
   string file_io_input_name = 8;
   string file_io_output_name = 9;
 }
