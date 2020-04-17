@@ -8,9 +8,9 @@ import (
 	"os"
 	"time"
 
-	"github.com/infinity-oj/judger-sql/interval/basestruct/report"
-
 	"github.com/infinity-oj/judger-sql/interval/baseinterface/test"
+
+	"github.com/infinity-oj/judger-sql/interval/basestruct/report"
 
 	sample2 "github.com/infinity-oj/judger-sql/interval/service/sample"
 
@@ -61,10 +61,10 @@ func main() {
 			continue
 		}
 
-		log.Printf("Get judgement, test point: %s", res.GetTestCase())
-
+		log.Printf("Get judgement, token: %s, test point: %s", res.GetToken(), res.GetTestCase())
+		token := res.GetToken()
 		sampleFileName := fmt.Sprintf("%s.yaml", res.GetTestCase())
-		sampleFile, err := getFile(c, res.GetPrivateSpace(), sampleFileName)
+		sampleFile, err := getFile(c, token, "private", sampleFileName)
 		if err != nil {
 			log.Fatalf("could not get judgement file: %v", err)
 		}
@@ -74,7 +74,7 @@ func main() {
 			log.Fatalf("could not parse judgement file: %v", err)
 		}
 
-		databaseDockerFile, err := getFile(c, res.GetPrivateSpace(), sample.Spec.DockerFile)
+		databaseDockerFile, err := getFile(c, token, "private", sample.Spec.DockerFile)
 		if err != nil {
 			log.Fatalf("could not find dockerfile : %v", err)
 		}
@@ -84,7 +84,7 @@ func main() {
 			log.Fatalf("could not write dockerfile : %v", err)
 		}
 
-		databaseBackup, err := getFile(c, res.GetPrivateSpace(), sample.Spec.Database)
+		databaseBackup, err := getFile(c, token, "private", sample.Spec.Database)
 		if err != nil {
 			log.Fatalf("could not find database file : %v", err)
 		}
@@ -94,8 +94,7 @@ func main() {
 			log.Fatalf("could not write database file : %v", err)
 		}
 
-
-		waitForPG, err := getFile(c, res.GetPrivateSpace(), "dockerfile/assignment3/wait-for-pg.sh")
+		waitForPG, err := getFile(c, token, "private", "dockerfile/assignment3/wait-for-pg.sh")
 		if err != nil {
 			log.Fatalf("could not find database file : %v", err)
 		}
@@ -106,7 +105,7 @@ func main() {
 		}
 
 		userFileName := fmt.Sprintf("%s.sql", res.GetTestCase())
-		userFile, err := getFile(c, res.GetUserSpace(), userFileName)
+		userFile, err := getFile(c, token, "user", userFileName)
 		if err != nil {
 			log.Fatalf("could not get user file: %v", err)
 		}
@@ -124,13 +123,22 @@ func main() {
 		fmt.Println(r.SID)
 		fmt.Println(r.Summary)
 		fmt.Println(r.Grade)
+		status, err := reportResult(c, token, uint64(r.Grade), r.Summary)
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(status)
+
+		}
+		time.Sleep(time.Second * 5)
 	}
 }
 
-func getFile(client pb.JudgementsClient, fileSpace, fileName string) ([]byte, error) {
+func getFile(client pb.JudgementsClient, token, spaceType, fileName string) ([]byte, error) {
 	req := &pb.FetchJudgeFileRequest{
-		FileSpace: fileSpace,
-		Filename:  fileName,
+		Token:    token,
+		Space:    spaceType,
+		Filename: fileName,
 	}
 
 	res, err := client.FetchFile(context.TODO(), req)
@@ -138,4 +146,19 @@ func getFile(client pb.JudgementsClient, fileSpace, fileName string) ([]byte, er
 		return nil, err
 	}
 	return res.GetFile(), nil
+}
+
+func reportResult(client pb.JudgementsClient, token string, grade uint64, msg string) (*pb.Status, error) {
+	req := &pb.ReturnJudgementRequest{
+		Token:  token,
+		Status: 0,
+		Score:  grade,
+		Msg:    msg,
+	}
+
+	res, err := client.ReturnJudgement(context.TODO(), req)
+	if err != nil {
+		return nil, err
+	}
+	return &res.Status, err
 }
