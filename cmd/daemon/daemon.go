@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	target      = "consul://192.168.31.211:8500/Judgements"
+	target      = "consul://192.168.3.10:8500/Judgements"
 	defaultName = "world"
 )
 
@@ -52,6 +52,12 @@ func main() {
 		res, err := c.FetchJudgement(ctx, req)
 		if err != nil {
 			log.Fatalf("could not get judgement: %v", err)
+		}
+
+		if res == nil {
+			log.Printf("nothing...")
+			time.Sleep(time.Second * 5)
+			continue
 		}
 
 		log.Printf("Get judgement, test point: %s", res.GetTestCase())
