@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io/ioutil"
 	"log"
 	"os"
 	"time"
@@ -71,6 +72,26 @@ func main() {
 		sample, err := sample2.LoadFromBytes(sampleFile)
 		if err != nil {
 			log.Fatalf("could not parse judgement file: %v", err)
+		}
+
+		databaseDockerFile, err := getFile(c, res.GetPrivateSpace(), sample.Spec.DockerFile)
+		if err != nil {
+			log.Fatalf("could not find dockerfile : %v", err)
+		}
+
+		err = ioutil.WriteFile(sample.Spec.DockerFile, databaseDockerFile, 0666)
+		if err != nil {
+			log.Fatalf("could not write dockerfile : %v", err)
+		}
+
+		databaseBackup, err := getFile(c, res.GetPrivateSpace(), sample.Spec.Database)
+		if err != nil {
+			log.Fatalf("could not find database file : %v", err)
+		}
+
+		err = ioutil.WriteFile(sample.Spec.Database, databaseBackup, 0666)
+		if err != nil {
+			log.Fatalf("could not write database file : %v", err)
 		}
 
 		userFileName := fmt.Sprintf("%s.sql", res.GetTestCase())

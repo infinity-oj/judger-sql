@@ -123,9 +123,7 @@ func init() {
 	proto.RegisterType((*CreateSubmissionResponse)(nil), "CreateSubmissionResponse")
 }
 
-func init() {
-	proto.RegisterFile("submission.proto", fileDescriptor_587ec94cf6d347bc)
-}
+func init() { proto.RegisterFile("submission.proto", fileDescriptor_587ec94cf6d347bc) }
 
 var fileDescriptor_587ec94cf6d347bc = []byte{
 	// 204 bytes of a gzipped FileDescriptorProto

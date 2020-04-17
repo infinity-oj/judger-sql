@@ -639,9 +639,7 @@ func init() {
 	proto.RegisterType((*FetchFileResponse)(nil), "FetchFileResponse")
 }
 
-func init() {
-	proto.RegisterFile("files.proto", fileDescriptor_cac8f32ecfdd343c)
-}
+func init() { proto.RegisterFile("files.proto", fileDescriptor_cac8f32ecfdd343c) }
 
 var fileDescriptor_cac8f32ecfdd343c = []byte{
 	// 464 bytes of a gzipped FileDescriptorProto
