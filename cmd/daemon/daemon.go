@@ -54,7 +54,7 @@ func main() {
 			log.Fatalf("could not get judgement: %v", err)
 		}
 
-		if res == nil {
+		if res == nil || res.GetTestCase() == "" {
 			log.Printf("nothing...")
 			time.Sleep(time.Second * 5)
 			continue
@@ -62,11 +62,12 @@ func main() {
 
 		log.Printf("Get judgement, test point: %s", res.GetTestCase())
 
-		sampleFileName := fmt.Sprintf("%s.yml", res.GetTestCase())
+		sampleFileName := fmt.Sprintf("%s.yaml", res.GetTestCase())
 		sampleFile, err := getFile(c, res.GetPrivateSpace(), sampleFileName)
 		if err != nil {
 			log.Fatalf("could not get judgement file: %v", err)
 		}
+
 		sample, err := sample2.LoadFromBytes(sampleFile)
 		if err != nil {
 			log.Fatalf("could not parse judgement file: %v", err)
