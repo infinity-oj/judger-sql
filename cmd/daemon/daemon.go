@@ -119,6 +119,7 @@ func main() {
 		reportChan := make(chan report.Report)
 		go t.Run(reportChan)
 		r := <-reportChan
+		t.Close()
 
 		fmt.Println(r.SID)
 		fmt.Println(r.Summary)
